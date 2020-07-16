@@ -1,0 +1,19 @@
+{
+  "name": "dynalist-date-parser",
+  "version": "0.0.1",
+  "description": "JS based library to extract, parse and format dates in Dynalist documents",
+  "main": "src/parser.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lasar/dynalist-date-parser.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lasar/dynalist-date-parser/issues"
+  },
+  "homepage": "https://github.com/lasar/dynalist-date-parser#readme"
+}
