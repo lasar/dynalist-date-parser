@@ -51,7 +51,7 @@ Parser.prototype.parseDate = function (input) {
         hour: null,
         minute: null,
         // Range Date
-        rageDate: null,
+        rangeDate: null,
         rangeYear: null,
         rangeMonth: null,
         rangeDay: null,
