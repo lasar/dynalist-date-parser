@@ -6,7 +6,7 @@ Parser.prototype.source = null;
 Parser.prototype.sourceType = null;
 Parser.prototype.dates = null;
 
-Parser.prototype.dateRegExp = '!\\\(([0-9]{4})-([0-9]{2})-([0-9]{2})( ?([0-9]{2}):([0-9]{2}))?( ?- ?([0-9]{4})-([0-9]{2})-([0-9]{2})( ?([0-9]{2}):([0-9]{2}))?)?( ?\\\| ?(~?)([0-9]+)([dwmy]))?\\\)';
+Parser.prototype.dateRegExp = '!\\\(([0-9]{4})-([0-9]{2})-([0-9]{2})( ?([0-9]{2}):([0-9]{2}))?( ?- ?([0-9]{4})-([0-9]{2})-([0-9]{2})( ?([0-9]{2}):([0-9]{2}))?)?( ?\\\| ?(~?)([0-9]+)([dwmy])([1-7]*)?\\\)';
 
 Parser.prototype.fromSource = function (source) {
     if (source) {
@@ -65,6 +65,7 @@ Parser.prototype.parseDate = function (input) {
         recurrenceFromCompletion: null,
         recurrenceAmount: null,
         recurrenceUnit: null,
+        recurrenceDays: null,
     };
 
     obj.year = m[1] ? parseInt(m[1]) : null;
