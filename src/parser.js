@@ -18,8 +18,7 @@ Parser.prototype.dateRegExp = '!\\\(' +
 
 Parser.prototype.fromSource = function (source) {
     if (source) {
-        // TODO Make sure this is a copy and not a reference to the original
-        this.source = source;
+        this.source = JSON.parse(JSON.stringify(source));
 
         if (typeof this.source === 'string') {
             this.sourceType = 'string';
