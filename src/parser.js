@@ -57,6 +57,7 @@ Parser.prototype.parseDate = function (input) {
         time: null,
         hour: null,
         minute: null,
+        timezone: null,
         // Range Date
         rangeDate: null,
         rangeYear: null,
@@ -66,6 +67,7 @@ Parser.prototype.parseDate = function (input) {
         rangeTime: null,
         rangeHour: null,
         rangeMinute: null,
+        rangeTimezone: null,
         // Recurrence
         recurrence: null,
         recurrenceString: null,
