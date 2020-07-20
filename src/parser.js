@@ -94,6 +94,12 @@ Parser.prototype.parseDate = function (input) {
     obj.recurrenceAmount = m[16] ? parseInt(m[16]) : null;
     obj.recurrenceUnit = m[17] ? m[17] : null;
 
+    if (m[18]) {
+        obj.recurrenceDays = m[18].split('').map(d => parseInt(d)).filter(d => d >= 1 && d <= 7);
+    } else {
+        obj.recurrenceDays = null;
+    }
+
     obj = this.updateDateStrings(obj);
 
     return obj;
@@ -125,7 +131,7 @@ Parser.prototype.updateDateStrings = function (obj) {
     }
 
     if (obj.recurrence) {
-        obj.recurrenceString = (obj.recurrenceFromCompletion ? '~' : '') + obj.recurrenceAmount + obj.recurrenceUnit;
+        obj.recurrenceString = (obj.recurrenceFromCompletion ? '~' : '') + obj.recurrenceAmount + obj.recurrenceUnit + (obj.recurrenceDays ? obj.recurrenceDays.join('') : '');
     } else {
         obj.recurrenceString = null;
     }
