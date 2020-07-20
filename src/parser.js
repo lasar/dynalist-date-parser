@@ -6,7 +6,15 @@ Parser.prototype.source = null;
 Parser.prototype.sourceType = null;
 Parser.prototype.dates = null;
 
-Parser.prototype.dateRegExp = '!\\\(([0-9]{4})-([0-9]{2})-([0-9]{2})( ?([0-9]{2}):([0-9]{2}))?( ?- ?([0-9]{4})-([0-9]{2})-([0-9]{2})( ?([0-9]{2}):([0-9]{2}))?)?( ?\\\| ?(~?)([0-9]+)([dwmy])([1-7]*))?\\\)';
+Parser.prototype.dateRegExp = '!\\\(' +
+    '([0-9]{4})-([0-9]{2})-([0-9]{2})' +
+    '( ?([0-9]{2}):([0-9]{2}))?' +
+    '( ?- ?' +
+    '([0-9]{4})-([0-9]{2})-([0-9]{2})' +
+    '( ?([0-9]{2}):([0-9]{2}))?' +
+    ')?' +
+    '( ?\\\| ?(~?)([0-9]+)([dwmy])([1-7]*))?' +
+    '\\\)';
 
 Parser.prototype.fromSource = function (source) {
     if (source) {
