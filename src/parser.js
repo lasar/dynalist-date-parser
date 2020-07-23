@@ -9,11 +9,11 @@ Parser.prototype.dates = null;
 Parser.prototype.dateRegExp = '!\\\(' +
     '([0-9]{4})-([0-9]{2})-([0-9]{2})' + // Date
     '( ?([0-9]{2}):([0-9]{2}))?' + // Time
-    '( ?\\+([0-9]{2}):([0-9]{2}))?' + // Timezone
+    '( ?([+-])([0-9]{2}):([0-9]{2}))?' + // Timezone
     '( ?- ?' + // Begin range
     '([0-9]{4})-([0-9]{2})-([0-9]{2})' + // Range Date
     '( ?([0-9]{2}):([0-9]{2}))?' + // Range Time
-    '( ?\\+([0-9]{2}):([0-9]{2}))?' + // Range Timezone
+    '( ?([+-])([0-9]{2}):([0-9]{2}))?' + // Range Timezone
     ')?' + // End range
     '( ?\\\| ?(~?)([0-9]+)([dwmy])([1-7]*))?' + // Recurrence
     '\\\)';
@@ -60,6 +60,7 @@ Parser.prototype.parseDate = function (input) {
         hour: null,
         minute: null,
         timezone: null,
+        timezoneDirection: null,
         timezoneHour: null,
         timezoneMinute: null,
         // Range Date
@@ -72,6 +73,7 @@ Parser.prototype.parseDate = function (input) {
         rangeHour: null,
         rangeMinute: null,
         rangeTimezone: null,
+        rangeTimezoneDirection: null,
         rangeTimezoneHour: null,
         rangeTimezoneMinute: null,
         // Recurrence
@@ -89,27 +91,29 @@ Parser.prototype.parseDate = function (input) {
     // 4 time string
     obj.hour = m[5] ? parseInt(m[5]) : null;
     obj.minute = m[6] ? parseInt(m[6]) : null;
+    obj.timezoneDirection = m[8] === '-' ? -1 : (m[8] === '+' ? 1 : null);
     // 7 timezone string
-    obj.timezoneHour = m[8] ? parseInt(m[8]) : null;
-    obj.timezoneMinute = m[9] ? parseInt(m[9]) : null;
-    // 10 range string
-    obj.rangeYear = m[11] ? parseInt(m[11]) : null;
-    obj.rangeMonth = m[12] ? parseInt(m[12]) : null;
-    obj.rangeDay = m[13] ? parseInt(m[13]) : null;
-    // 14 range time string
-    obj.rangeHour = m[15] ? parseInt(m[15]) : null;
-    obj.rangeMinute = m[16] ? parseInt(m[16]) : null;
-    // 17 range timezone string
-    obj.rangeTimezoneHour = m[18] ? parseInt(m[18]) : null;
-    obj.rangeTimezoneMinute = m[19] ? parseInt(m[19]) : null;
-    // 20 recurrence string
-    obj.recurrence = !!m[20];
-    obj.recurrenceFromCompletion = !!m[21];
-    obj.recurrenceAmount = m[22] ? parseInt(m[22]) : null;
-    obj.recurrenceUnit = m[23] ? m[23] : null;
+    obj.timezoneHour = m[9] ? parseInt(m[9]) : null;
+    obj.timezoneMinute = m[10] ? parseInt(m[10]) : null;
+    // 11 range string
+    obj.rangeYear = m[12] ? parseInt(m[12]) : null;
+    obj.rangeMonth = m[13] ? parseInt(m[13]) : null;
+    obj.rangeDay = m[14] ? parseInt(m[14]) : null;
+    // 15 range time string
+    obj.rangeHour = m[16] ? parseInt(m[16]) : null;
+    obj.rangeMinute = m[17] ? parseInt(m[17]) : null;
+    // 18 range timezone string
+    obj.rangeTimezoneDirection = m[19] === '-' ? -1 : (m[19] === '+' ? 1 : null);
+    obj.rangeTimezoneHour = m[20] ? parseInt(m[20]) : null;
+    obj.rangeTimezoneMinute = m[21] ? parseInt(m[21]) : null;
+    // 22 recurrence string
+    obj.recurrence = !!m[22];
+    obj.recurrenceFromCompletion = !!m[23];
+    obj.recurrenceAmount = m[24] ? parseInt(m[24]) : null;
+    obj.recurrenceUnit = m[25] ? m[25] : null;
 
-    if (m[24]) {
-        obj.recurrenceDays = m[24].split('').map(d => parseInt(d)).filter(d => d >= 1 && d <= 7);
+    if (m[26]) {
+        obj.recurrenceDays = m[26].split('').map(d => parseInt(d)).filter(d => d >= 1 && d <= 7);
     } else {
         obj.recurrenceDays = null;
     }
@@ -132,8 +136,8 @@ Parser.prototype.updateDateStrings = function (obj) {
         obj.time = null;
     }
 
-    if (obj.timezoneHour) {
-        obj.timezone = this.nullify(obj.timezoneHour, 2) + ':' + this.nullify(obj.timezoneMinute, 2);
+    if (obj.timezoneDirection) {
+        obj.timezone = (obj.timezoneDirection > 0 ? '+' : '-') + this.nullify(obj.timezoneHour, 2) + ':' + this.nullify(obj.timezoneMinute, 2);
     } else {
         obj.timezone = null;
     }
@@ -150,8 +154,8 @@ Parser.prototype.updateDateStrings = function (obj) {
         obj.rangeTime = null;
     }
 
-    if (obj.rangeTimezoneHour) {
-        obj.rangeTimezone = this.nullify(obj.rangeTimezoneHour, 2) + ':' + this.nullify(obj.rangeTimezoneMinute, 2);
+    if (obj.rangeTimezoneDirection) {
+        obj.rangeTimezone = (obj.rangeTimezoneDirection > 0 ? '+' : '-') + this.nullify(obj.rangeTimezoneHour, 2) + ':' + this.nullify(obj.rangeTimezoneMinute, 2);
     } else {
         obj.rangeTimezone = null;
     }
@@ -166,10 +170,10 @@ Parser.prototype.updateDateStrings = function (obj) {
         '!(',
         obj.date,
         obj.time ? ' ' + obj.time : '',
-        obj.timezone ? ' +' + obj.timezone : '',
+        obj.timezone ? ' ' + obj.timezone : '',
         obj.rangeDate ? ' - ' + obj.rangeDate : '',
         obj.rangeTime ? ' ' + obj.rangeTime : '',
-        obj.rangeTimezone ? ' +' + obj.rangeTimezone : '',
+        obj.rangeTimezone ? ' ' + obj.rangeTimezone : '',
         obj.recurrence ? ' | ' + obj.recurrenceString : '',
         ')'
     ].join('');

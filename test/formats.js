@@ -14,6 +14,7 @@ function compareInputOutput(input, output) {
         hour: null,
         minute: null,
         timezone: null,
+        timezoneDirection: null,
         timezoneHour: null,
         timezoneMinute: null,
         rangeDate: null,
@@ -24,6 +25,7 @@ function compareInputOutput(input, output) {
         rangeHour: null,
         rangeMinute: null,
         rangeTimezone: null,
+        rangeTimezoneDirection: null,
         rangeTimezoneHour: null,
         rangeTimezoneMinute: null,
         recurrence: false,
@@ -82,7 +84,24 @@ describe('Date Formats', function () {
             time: '01:00',
             hour: 1,
             minute: 0,
-            timezone: '02:00',
+            timezone: '+02:00',
+            timezoneDirection: 1,
+            timezoneHour: 2,
+            timezoneMinute: 0,
+        });
+    });
+
+    it('Date/time with negative timezone', function () {
+        compareInputOutput('!(2020-07-20 01:00 -02:00)', {
+            date: '2020-07-20',
+            year: 2020,
+            month: 7,
+            day: 20,
+            time: '01:00',
+            hour: 1,
+            minute: 0,
+            timezone: '-02:00',
+            timezoneDirection: -1,
             timezoneHour: 2,
             timezoneMinute: 0,
         });
@@ -121,7 +140,7 @@ describe('Date Formats', function () {
     });
 
     it('Date/time range with timezone', function () {
-        compareInputOutput('!(2020-07-28 10:00 +02:00 - 2021-08-29 16:30 +02:00)', {
+        compareInputOutput('!(2020-07-28 10:00 +02:00 - 2021-08-29 16:30 -03:00)', {
             date: '2020-07-28',
             year: 2020,
             month: 7,
@@ -129,7 +148,8 @@ describe('Date Formats', function () {
             time: '10:00',
             hour: 10,
             minute: 0,
-            timezone: '02:00',
+            timezone: '+02:00',
+            timezoneDirection: 1,
             timezoneHour: 2,
             timezoneMinute: 0,
             rangeDate: '2021-08-29',
@@ -139,8 +159,9 @@ describe('Date Formats', function () {
             rangeTime: '16:30',
             rangeHour: 16,
             rangeMinute: 30,
-            rangeTimezone: '02:00',
-            rangeTimezoneHour: 2,
+            rangeTimezone: '-03:00',
+            rangeTimezoneDirection: -1,
+            rangeTimezoneHour: 3,
             rangeTimezoneMinute: 0,
         });
     });
@@ -154,7 +175,8 @@ describe('Date Formats', function () {
             time: '10:00',
             hour: 10,
             minute: 0,
-            timezone: '02:00',
+            timezone: '+02:00',
+            timezoneDirection: 1,
             timezoneHour: 2,
             timezoneMinute: 0,
             rangeDate: '2021-08-29',
@@ -164,7 +186,8 @@ describe('Date Formats', function () {
             rangeTime: '16:30',
             rangeHour: 16,
             rangeMinute: 30,
-            rangeTimezone: '02:00',
+            rangeTimezone: '+02:00',
+            rangeTimezoneDirection: 1,
             rangeTimezoneHour: 2,
             rangeTimezoneMinute: 0,
             recurrence: true,
