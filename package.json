@@ -19,5 +19,8 @@
   "devDependencies": {
     "mocha": "^8.0.1",
     "should": "^13.2.3"
+  },
+  "dependencies": {
+    "luxon": "^1.24.1"
   }
 }
