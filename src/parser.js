@@ -8,17 +8,19 @@ Parser.prototype.source = null;
 Parser.prototype.sourceType = null;
 Parser.prototype.dates = null;
 
-Parser.prototype.dateRegExp = '!\\\(' +
-    '([0-9]{4})-([0-9]{2})-([0-9]{2})' + // Date
-    '( ?([0-9]{2}):([0-9]{2}))?' + // Time
-    '( ?([+-])([0-9]{2}):([0-9]{2}))?' + // Timezone
-    '( ?- ?' + // Begin range
-    '([0-9]{4})-([0-9]{2})-([0-9]{2})' + // Range Date
-    '( ?([0-9]{2}):([0-9]{2}))?' + // Range Time
-    '( ?([+-])([0-9]{2}):([0-9]{2}))?' + // Range Timezone
-    ')?' + // End range
-    '( ?\\\| ?(~?)([0-9]+)([dwmy])([1-7]*))?' + // Recurrence
-    '\\\)';
+Parser.prototype.dateRegExp = (() => {
+    return '!\\\(' +
+        '([0-9]{4})-([0-9]{2})-([0-9]{2})' + // Date
+        '( ?([0-9]{2}):([0-9]{2}))?' + // Time
+        '( ?([+-])([0-9]{2}):([0-9]{2}))?' + // Timezone
+        '( ?- ?' + // Begin range
+        '([0-9]{4})-([0-9]{2})-([0-9]{2})' + // Range Date
+        '( ?([0-9]{2}):([0-9]{2}))?' + // Range Time
+        '( ?([+-])([0-9]{2}):([0-9]{2}))?' + // Range Timezone
+        ')?' + // End range
+        '( ?\\\| ?(~?)([0-9]+)([dwmy])([1-7]*))?' + // Recurrence
+        '\\\)';
+})();
 
 Parser.prototype.fromSource = function (source) {
     if (source) {
