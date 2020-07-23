@@ -208,6 +208,10 @@ Parser.prototype.nextRecurrence = function (idx = null, modify = false) {
 
     let next = false;
 
+    if(this.dates === null) {
+        return next;
+    }
+
     this.dates.map((value, index) => {
         // Filter by index if given
         if (idx !== null && idx !== index) {
