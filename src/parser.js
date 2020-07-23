@@ -203,15 +203,12 @@ Parser.prototype.modifyDates = function (fn, idx = null) {
     });
 };
 
-Parser.prototype.nextRecurrence = function (idx = null) {
+Parser.prototype.nextRecurrence = function (idx = null, modify = false) {
+    const self = this;
+
     let next = false;
 
     this.dates.map((value, index) => {
-        // Skip remaining dates if a recurring date was found
-        if (next !== false) {
-            return;
-        }
-
         // Filter by index if given
         if (idx !== null && idx !== index) {
             return;
@@ -224,6 +221,10 @@ Parser.prototype.nextRecurrence = function (idx = null) {
 
         // Found one!
         next = this.applyRecurrence(value);
+
+        if(modify) {
+            self.modifyDates(d => next, idx);
+        }
     });
 
     return next;
