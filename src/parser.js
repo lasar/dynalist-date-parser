@@ -24,7 +24,7 @@ Parser.prototype.dateRegExp = (() => {
 
 Parser.prototype.fromSource = function (source) {
     if (source) {
-        this.source = JSON.parse(JSON.stringify(source));
+        this.source = this.copyObject(source);
 
         if (typeof this.source === 'string') {
             this.sourceType = 'string';
@@ -203,6 +203,105 @@ Parser.prototype.modifyDates = function (fn, idx = null) {
     });
 };
 
+Parser.prototype.nextRecurrence = function (idx = null) {
+    let next = false;
+
+    this.dates.map((value, index) => {
+        // Skip remaining dates if a recurring date was found
+        if (next !== false) {
+            return;
+        }
+
+        // Filter by index if given
+        if (idx !== null && idx !== index) {
+            return;
+        }
+
+        // Skip dates that have no recurrence
+        if (!value.recurrence) {
+            return;
+        }
+
+        // Found one!
+        next = this.applyRecurrence(value);
+    });
+
+    return next;
+}
+
+Parser.prototype.applyRecurrence = function (input) {
+    if (!input.recurrence) {
+        return input;
+    }
+
+    let next = this.copyObject(input);
+
+    if (input.date) {
+        if (input.recurrenceFromCompletion) {
+            // TODO set next.[year/month/day] to today(?) so input calculations can then add interval from completion (i.e. now)
+        }
+
+        // Get date object for manipulation
+        let date = this.getLuxon(input, 'date');
+
+        // Add time
+        // TODO: Handle recurrenceDays
+        switch(input.recurrenceUnit) {
+            case 'd':
+                date = date.plus({days: input.recurrenceAmount});
+                break;
+            case 'w':
+                date = date.plus({weeks: input.recurrenceAmount});
+                break;
+            case 'm':
+                date = date.plus({months: input.recurrenceAmount});
+                break;
+            case 'y':
+                date = date.plus({years: input.recurrenceAmount});
+                break;
+        }
+
+        // Write new date back to next object.
+        next.year = date.year;
+        next.month = date.month;
+        next.day = date.day;
+    }
+
+    if (input.rangeDate) {
+        // TODO Duplicate above logic for range if given
+        // TODO If recurrenceFromCompletion, then calculate diff between between original date and range, and apply to today
+    }
+
+    next = this.updateDateStrings(next);
+
+    return next;
+};
+
+Parser.prototype.getLuxon = function (input, fragment) {
+    switch(fragment) {
+        case 'date':
+            return DateTime.fromObject({
+                year: input.year,
+                month: input.month,
+                day: input.day,
+                hour: input.hour,
+                minute: input.minute,
+                // zone: TODO
+            });
+        case 'range':
+            return DateTime.fromObject({
+                year: input.rangeYear,
+                month: input.rangeMonth,
+                day: input.rangeDay,
+                hour: input.rangeHour,
+                minute: input.rangeMinute,
+                // zone: TODO
+            });
+        default:
+            return false;
+    }
+};
+
 Parser.prototype.updateSource = function () {
     const self = this;
 
@@ -223,5 +322,9 @@ Parser.prototype.updateSource = function () {
 
     return this.source;
 }
+
+Parser.prototype.copyObject = function (input) {
+    return JSON.parse(JSON.stringify(input));
+};
 
 module.exports = Parser;
