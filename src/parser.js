@@ -268,8 +268,7 @@ Parser.prototype.applyRecurrence = function (input) {
     }
 
     if (input.rangeDate) {
-        // TODO Duplicate above logic for range if given
-        // TODO If recurrenceFromCompletion, then calculate diff between between original date and range, and apply to today
+        // TODO Duplicate above logic for range
     }
 
     next = this.updateDateStrings(next);
@@ -286,7 +285,7 @@ Parser.prototype.getLuxon = function (input, fragment) {
                 day: input.day,
                 hour: input.hour,
                 minute: input.minute,
-                // zone: TODO
+                // zone: TODO Convert input.timezone to something luxon understands
             });
         case 'range':
             return DateTime.fromObject({
@@ -295,7 +294,7 @@ Parser.prototype.getLuxon = function (input, fragment) {
                 day: input.rangeDay,
                 hour: input.rangeHour,
                 minute: input.rangeMinute,
-                // zone: TODO
+                // zone: TODO Convert input.rangeTimezone to something luxon understands
             });
         default:
             return false;
