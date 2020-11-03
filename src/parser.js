@@ -54,6 +54,7 @@ Parser.prototype.parseDate = function (input) {
     let obj = {
         origin: input,
         string: null,
+        delete: false,
         // Date
         date: null,
         year: null,
@@ -128,59 +129,63 @@ Parser.prototype.parseDate = function (input) {
 }
 
 Parser.prototype.updateDateStrings = function (obj) {
-    if (obj.year) {
+    if (obj.year && !obj.delete) {
         obj.date = obj.year + '-' + this.nullify(obj.month, 2) + '-' + this.nullify(obj.day, 2);
     } else {
         obj.date = null;
     }
 
-    if (obj.hour) {
+    if (obj.hour && !obj.delete) {
         obj.time = this.nullify(obj.hour, 2) + ':' + this.nullify(obj.minute, 2);
     } else {
         obj.time = null;
     }
 
-    if (obj.timezoneDirection) {
+    if (obj.timezoneDirection && !obj.delete) {
         obj.timezone = (obj.timezoneDirection > 0 ? '+' : '-') + this.nullify(obj.timezoneHour, 2) + ':' + this.nullify(obj.timezoneMinute, 2);
     } else {
         obj.timezone = null;
     }
 
-    if (obj.rangeYear) {
+    if (obj.rangeYear && !obj.delete) {
         obj.rangeDate = obj.rangeYear + '-' + this.nullify(obj.rangeMonth, 2) + '-' + this.nullify(obj.rangeDay, 2);
     } else {
         obj.rangeDate = null;
     }
 
-    if (obj.rangeHour) {
+    if (obj.rangeHour && !obj.delete) {
         obj.rangeTime = this.nullify(obj.rangeHour, 2) + ':' + this.nullify(obj.rangeMinute, 2);
     } else {
         obj.rangeTime = null;
     }
 
-    if (obj.rangeTimezoneDirection) {
+    if (obj.rangeTimezoneDirection && !obj.delete) {
         obj.rangeTimezone = (obj.rangeTimezoneDirection > 0 ? '+' : '-') + this.nullify(obj.rangeTimezoneHour, 2) + ':' + this.nullify(obj.rangeTimezoneMinute, 2);
     } else {
         obj.rangeTimezone = null;
     }
 
-    if (obj.recurrence) {
+    if (obj.recurrence && !obj.delete) {
         obj.recurrenceString = (obj.recurrenceFromCompletion ? '~' : '') + obj.recurrenceAmount + obj.recurrenceUnit + (obj.recurrenceDays ? obj.recurrenceDays.join('') : '');
     } else {
         obj.recurrenceString = null;
     }
 
-    obj.string = [
-        '!(',
-        obj.date,
-        obj.time ? ' ' + obj.time : '',
-        obj.timezone ? ' ' + obj.timezone : '',
-        obj.rangeDate ? ' - ' + obj.rangeDate : '',
-        obj.rangeTime ? ' ' + obj.rangeTime : '',
-        obj.rangeTimezone ? ' ' + obj.rangeTimezone : '',
-        obj.recurrence ? ' | ' + obj.recurrenceString : '',
-        ')'
-    ].join('');
+    if(!obj.delete) {
+        obj.string = [
+            '!(',
+            obj.date,
+            obj.time ? ' ' + obj.time : '',
+            obj.timezone ? ' ' + obj.timezone : '',
+            obj.rangeDate ? ' - ' + obj.rangeDate : '',
+            obj.rangeTime ? ' ' + obj.rangeTime : '',
+            obj.rangeTimezone ? ' ' + obj.rangeTimezone : '',
+            obj.recurrence ? ' | ' + obj.recurrenceString : '',
+            ')'
+        ].join('');
+    } else {
+        obj.string = '';
+    }
 
     return obj;
 }

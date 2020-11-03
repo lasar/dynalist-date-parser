@@ -6,6 +6,7 @@ function compareInputOutput(input, output) {
     const outputDefaults = {
         origin: input,
         string: input,
+        delete: false,
         date: null,
         year: null,
         month: null,
