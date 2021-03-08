@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/lasar/dynalist-date-parser#readme",
   "devDependencies": {
-    "mocha": "^8.3.0",
+    "mocha": "^8.3.1",
     "should": "^13.2.3"
   },
   "dependencies": {
