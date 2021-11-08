@@ -21,6 +21,6 @@
     "should": "^13.2.3"
   },
   "dependencies": {
-    "luxon": "^2.0.2"
+    "luxon": "^2.1.0"
   }
 }
