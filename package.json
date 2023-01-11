@@ -1,6 +1,6 @@
 {
   "name": "dynalist-date-parser",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "JS based library to extract, parse and format dates in Dynalist documents",
   "main": "src/parser.js",
   "scripts": {
