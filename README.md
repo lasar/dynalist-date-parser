@@ -39,3 +39,9 @@ const updatedNode = ddp.updateSource();
 
 ```
 
+## Build webpack version
+
+- Update `version` in package.json
+- `npm rum webpack`
+- Remove old versions from `dist/`
+- `git add` the new version
