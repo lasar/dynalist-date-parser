@@ -24,6 +24,6 @@
     "webpack-cli": "^5.0.1"
   },
   "dependencies": {
-    "luxon": "^3.2.1"
+    "luxon": "^3.3.0"
   }
 }
